@@ -71,14 +71,14 @@ public class CategoriaController {
 		        consumes = MediaType.APPLICATION_JSON_VALUE,
 		        produces = MediaType.APPLICATION_JSON_VALUE
 		    )
-		public ResponseEntity<Categoria> post(@Valid @RequestBody CategoriaCreateDTO categoriaDTO){
+		public ResponseEntity<Categoria> post(@Valid @RequestBody CategoriaCreateDTO categoriaCreateDTO){
 				
-			if (categoriaRepository.existsByNomeDaCategoria(categoriaDTO.getNomeDaCategoria())) {
+			if (categoriaRepository.existsByNomeDaCategoriaContainingIgnoreCase(categoriaCreateDTO.getNomeDaCategoria())) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria já existe!");
 	        }
 				
 			Categoria categoria = new Categoria();
-			categoria.setNomeDaCategoria(categoriaDTO.getNomeDaCategoria());
+			categoria.setNomeDaCategoria(categoriaCreateDTO.getNomeDaCategoria());
 				
 			return ResponseEntity.status(HttpStatus.CREATED)
 						.body(categoriaRepository.save(categoria));
@@ -94,10 +94,6 @@ public class CategoriaController {
 		        produces = MediaType.APPLICATION_JSON_VALUE
 		    ) 
 		public ResponseEntity<Categoria> put(@Valid @RequestBody Categoria categoria){	
-			
-			if (categoriaRepository.existsByNomeDaCategoria(categoria.getNomeDaCategoria())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria já existe!");
-            }
 			
 			
 			return categoriaRepository.findById(categoria.getId()) 
